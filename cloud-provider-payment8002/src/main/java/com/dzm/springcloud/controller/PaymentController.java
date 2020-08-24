@@ -5,6 +5,7 @@ import com.dzm.springcloud.entities.Payment;
 import com.dzm.springcloud.service.PaymentService;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,9 @@ public class PaymentController {
   @Resource
   private PaymentService paymentService;
 
+  @Value("${server.port}")
+  private String serverPort;
+
   @PostMapping(value = "/payment/create")
   public CommonResult create(@RequestBody Payment payment){
     int result = paymentService.create(payment);
@@ -39,7 +43,7 @@ public class PaymentController {
     Payment payment = paymentService.getPaymentById(id);
     log.info("*********查询结果："+payment);
     if (payment!=null){
-      return new CommonResult(200,"查询成功",payment);
+      return new CommonResult(200,"查询成功 serverPort="+serverPort,payment);
     }else {
       return new CommonResult(444,"没有对应记录，查询ID："+id,null);
     }
